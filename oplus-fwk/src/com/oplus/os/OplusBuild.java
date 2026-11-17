@@ -35,19 +35,21 @@ public class OplusBuild {
     public static final int UNKNOWN = 0;
     private static final String[] VERSIONS = {"V1.0", "V1.2", "V1.4", "V2.0", "V2.1", "V3.0", "V3.1", "V3.2", "V5.0", "V5.1", "V5.2", "V6.0", "V6.1", "V6.2", "V6.7", "V7", "V7.1", "V7.2", "V11", "V11.1", "V11.2", "V11.3", "V12", "V12.1", "V12.2", null};
 
+    // Report the ColorOS version from build properties so apps from that
+    // release (e.g. OOS 16 OplusCamera) take their matching code paths, such
+    // as COUI background blur, which is disabled for SDK_VERSION <= 34.
+    // Defaults match OxygenOS 16 when the properties are not set.
     public static class VERSION {
-        public static final String RELEASE = "V12.1";
-        public static final int SDK_VERSION = getOplusOSVERSION();
-        public static final int SDK_SUB_VERSION = 19;
+        public static final String RELEASE =
+                SystemProperties.get("ro.build.version.oplusrom", "V16.0.0");
+        public static final int SDK_VERSION =
+                SystemProperties.getInt("ro.build.version.oplus.api", 38);
+        public static final int SDK_SUB_VERSION =
+                SystemProperties.getInt("ro.build.version.oplus.sub_api", 47);
     }
 
     public static int getOplusOSVERSION() {
-        for (int i = VERSIONS.length - 2; i >= 0; i--) {
-            if (!TextUtils.isEmpty(VERSION.RELEASE) && VERSION.RELEASE.startsWith(VERSIONS[i])) {
-                return i + 1;
-            }
-        }
-        return 23;
+        return VERSION.SDK_VERSION;
     }
 
     public static boolean setDeviceName(String name) {
@@ -81,6 +83,6 @@ public class OplusBuild {
     }
 
     public static String getVersionProp(String property) {
-        return "V12.1";
+        return VERSION.RELEASE;
     }
 }
