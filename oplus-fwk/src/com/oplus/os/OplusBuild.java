@@ -39,13 +39,36 @@ public class OplusBuild {
     // release (e.g. OOS 16 OplusCamera) take their matching code paths, such
     // as COUI background blur, which is disabled for SDK_VERSION <= 34.
     // Defaults match OxygenOS 16 when the properties are not set.
+    //
+    // Processes listed here keep the legacy ColorOS 12.1 values instead: on
+    // a newer version they enable code paths that need framework classes
+    // these stubs do not provide (e.g. OnePlus Gallery checks OS >= 26 and
+    // then calls com.oplus.util.OplusPlatformLevelUtils).
+    private static final String[] LEGACY_VERSION_PROCESSES = {
+        "com.oneplus.gallery",
+    };
+
+    private static boolean useLegacyVersion() {
+        String process = android.app.Application.getProcessName();
+        if (process == null) {
+            return false;
+        }
+        for (String p : LEGACY_VERSION_PROCESSES) {
+            if (process.equals(p) || process.startsWith(p + ":")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static class VERSION {
-        public static final String RELEASE =
-                SystemProperties.get("ro.build.version.oplusrom", "V16.0.0");
-        public static final int SDK_VERSION =
-                SystemProperties.getInt("ro.build.version.oplus.api", 38);
-        public static final int SDK_SUB_VERSION =
-                SystemProperties.getInt("ro.build.version.oplus.sub_api", 47);
+        private static final boolean LEGACY = useLegacyVersion();
+        public static final String RELEASE = LEGACY ? "V12.1"
+                : SystemProperties.get("ro.build.version.oplusrom", "V16.0.0");
+        public static final int SDK_VERSION = LEGACY ? OplusOS_12_1
+                : SystemProperties.getInt("ro.build.version.oplus.api", 38);
+        public static final int SDK_SUB_VERSION = LEGACY ? 19
+                : SystemProperties.getInt("ro.build.version.oplus.sub_api", 47);
     }
 
     public static int getOplusOSVERSION() {
