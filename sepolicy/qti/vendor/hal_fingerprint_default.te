@@ -31,6 +31,7 @@ rw_dir_file(hal_fingerprint_default, vendor_proc_display)
 rw_dir_file(hal_fingerprint_default, vendor_sysfs_graphics)
 r_dir_file(hal_fingerprint_default, sysfs_leds)
 r_dir_file(hal_fingerprint_default, vendor_proc_fingerprint)
+allow hal_fingerprint_default vendor_proc_fingerprint:file w_file_perms;
 
 get_prop(hal_fingerprint_default, system_oplus_project_prop)
 get_prop(hal_fingerprint_default, vendor_radio_prop)

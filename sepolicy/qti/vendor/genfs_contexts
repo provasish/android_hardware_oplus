@@ -40,6 +40,7 @@ genfscon proc /oplus_rf    u:object_r:vendor_proc_engineer:s0
 
 # Fingerprint
 genfscon proc /fp_id    u:object_r:vendor_proc_fingerprint:s0
+genfscon proc /tee_bind_core    u:object_r:vendor_proc_fingerprint:s0
 
 # Frame boost
 genfscon proc /oplus_frame_boost    u:object_r:vendor_proc_oplus_frame_boost:s0
